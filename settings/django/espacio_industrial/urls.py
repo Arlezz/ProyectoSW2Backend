@@ -1,4 +1,4 @@
-"""django_project URL Configuration
+"""espacio_industrial URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
@@ -20,6 +20,6 @@ from django.contrib.auth.models import User
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #path('', include("course_management.urls")),
+    path('api/', include("api.urls")),
     #path('api-auth/', include('rest_framework.urls')),
 ]
