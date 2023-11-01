@@ -1,30 +1,34 @@
-version: '3.7'
+version: '3.8'
 
 services:
-  django_gunicorn:
+  django:
+    image: python:3.10-slim-buster
+    build:
+      context: ./settings/django/
+      dockerfile: Dockerfile
     volumes:
       - static:/static
-      - ./django_project:/app
-    env_file:
-      - env
-    build:
-      context: .
+      - ./settings/django/:/usr/src/app/:rw
+    ports:
+      - 8000:8000
     networks:
       - internal
+
   nginx:
-    build: ./nginx
+    build: ./settings/nginx
     volumes:
       - static:/static
     ports:
       - "8080:80"
     depends_on:
-      - django_gunicorn
+      - django
     networks:
       - internal
 
 networks:
   internal:
     name: internal
+
 
 volumes:
   static:
