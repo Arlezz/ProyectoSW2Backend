@@ -1,10 +1,14 @@
-from django.shortcuts import render
-#import json 
-from django.http import JsonResponse
+from rest_framework import status, generics
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .models import CustomUser, NormalUser, ProviderUser
+from .serializers import (
+    MyTokenObtainPairSerializer,
+    RegisterNormalUserSerializer,
+    RegisterProviderUserSerializer,
+)
 
 # Create your views here.
 
@@ -2607,5 +2611,27 @@ def public(request):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
     return Response({'error': 'Method not allowed.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-    
+
+class MyObtainTokenPairView(TokenObtainPairView):
+    permission_classes = [AllowAny]
+    serializer_class = MyTokenObtainPairSerializer
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def register_normal_user(request):
+    serializer = RegisterNormalUserSerializer(data=request.data)
+    if serializer.is_valid():
+        user = serializer.save()
+        return Response({"user_id": user.id}, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def register_provider_user(request):
+    serializer = RegisterProviderUserSerializer(data=request.data)
+    if serializer.is_valid():
+        user = serializer.save()
+        return Response({"user_id": user.id}, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 # @permission_classes([IsAuthenticated])

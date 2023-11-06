@@ -21,6 +21,7 @@ COPY wait-for-it.sh /wait-for-it.sh
 
 RUN python -m pip install psycopg2-binary
 RUN python -m pip install django-environ
+RUN python -m pip install djangorestframework-simplejwt
 RUN python -m pip install bcrypt
 RUN pip install -r requirements.txt
 
